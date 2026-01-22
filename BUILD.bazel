@@ -1,4 +1,4 @@
-load("@aspect_bazel_lib//lib:transitions.bzl", "platform_transition_filegroup")
+load("@bazel_lib//lib:transitions.bzl", "platform_transition_filegroup")
 
 PLATFORMS = [
     "@zig_sdk//platform:darwin_amd64",

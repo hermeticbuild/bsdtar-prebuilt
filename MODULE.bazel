@@ -1,4 +1,4 @@
-bazel_dep(name = "aspect_bazel_lib", version = "2.15.3")
+bazel_dep(name = "bazel_lib", version = "3.1.1")
 bazel_dep(name = "libarchive", version = "3.8.1")
 bazel_dep(name = "hermetic_cc_toolchain", version = "4.0.0")
 
@@ -11,6 +11,29 @@ single_version_override(
         "//patches:libarchive_bsdtar_windows_crlf.patch",
     ],
     patch_strip = 1,
+)
+
+# bazel9 support: to be upstreamed to libarchive
+single_version_override(
+    module_name = "bzip2",
+    version = "1.0.8.bcr.3",
+)
+
+single_version_override(
+    module_name = "xz",
+    version = "5.4.5.bcr.7",
+)
+
+single_version_override(
+    module_name = "mbedtls",
+    version = "3.6.0.bcr.1",
+)
+
+archive_override(
+    module_name = "hermetic_cc_toolchain",
+    urls = ["https://github.com/uber/hermetic_cc_toolchain/archive/f6b21a0b8d53ec8ab03b0e9fcdd2376c9f2ebd2f.tar.gz"],
+    strip_prefix = "hermetic_cc_toolchain-f6b21a0b8d53ec8ab03b0e9fcdd2376c9f2ebd2f",
+    integrity = "sha256-kJRZ92H84ta4rVPUbi7YByZaawsrqiV+W2NWsVPMkd0=",
 )
 
 toolchains = use_extension("@hermetic_cc_toolchain//toolchain:ext.bzl", "toolchains")
