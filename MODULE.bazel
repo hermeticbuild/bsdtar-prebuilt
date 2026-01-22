@@ -5,10 +5,13 @@ bazel_dep(name = "hermetic_cc_toolchain", version = "4.0.0")
 # libarchive_bsdtar_windows_crlf.patch
 # - tolerate mtree files with CRLF endings
 # - TODO: remove when https://github.com/libarchive/libarchive/pull/2717 is merged
+# libarchive_enable_xar_support.patch
+# - add libxml2 dependency and md5 support to enable xar support
 single_version_override(
     module_name = "libarchive",
     patches = [
         "//patches:libarchive_bsdtar_windows_crlf.patch",
+        "//patches:libarchive_enable_xar_support.patch",
     ],
     patch_strip = 1,
 )
