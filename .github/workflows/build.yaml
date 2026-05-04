@@ -36,7 +36,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         id: upload
         with:
-          name: linux
+          name: binaries
           retention-days: 1
           path: |
             tar_darwin_arm64
