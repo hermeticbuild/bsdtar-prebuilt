@@ -30,7 +30,7 @@ jobs:
           mv bazel-out/linux_x86_64_musl-opt/bin/external/libarchive+/tar/bsdtar tar_linux_amd64
           mv bazel-out/windows_x86_64-opt/bin/external/libarchive+/tar/bsdtar.exe tar_windows_x86_64.exe
           mv bazel-out/windows_aarch64-opt/bin/external/libarchive+/tar/bsdtar.exe tar_windows_arm64.exe
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v4
         with:
           subject-path: 'tar_*'
       - uses: actions/upload-artifact@v4
