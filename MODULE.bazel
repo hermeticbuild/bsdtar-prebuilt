@@ -9,11 +9,15 @@ bazel_dep(name = "bzip2", version = "1.0.8.bcr.4")  # For compatibility with Baz
 # libarchive_bsdtar_windows_crlf.patch
 # - tolerate mtree files with CRLF endings
 # - TODO: remove when https://github.com/libarchive/libarchive/pull/2717 is merged
+# libarchive_windows_mingw.patch
+# - avoid redefining mode_t before MinGW sys/types.h provides it
+# - link bcrypt for Windows clang/MinGW builds using libarchive's BCrypt path
 single_version_override(
     module_name = "libarchive",
     patch_strip = 1,
     patches = [
         "//patches:libarchive_bsdtar_windows_crlf.patch",
+        "//patches:libarchive_windows_mingw.patch",
     ],
 )
 
