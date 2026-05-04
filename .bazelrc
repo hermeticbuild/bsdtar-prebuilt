@@ -1,4 +1,6 @@
 common --enable_platform_specific_config
+common:linux --host_platform=//:local_linux_platform
+common:windows --host_platform=//:local_windows_platform
 
 # Determines whether C++ binaries will be linked dynamically, interacting with the linkstatic attribute on build rules.
 # off: Links all targets in mostly static mode. If -static is set in linkopts, targets will change to fully static.
@@ -8,41 +10,12 @@ build --dynamic_mode=off
 build --experimental_platform_in_output_dir
 build --incompatible_strict_action_env
 build --compilation_mode=opt
+build --features=thin_lto
 
 # On Linux (targetting linux and macos) use the zig toolchain from hermetic_cc_toolchain
-build:linux --platforms @zig_sdk//libc_aware/platform:linux_amd64_musl
-build:linux --repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
-build:linux --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
-build:linux --host_action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+common --repo_env=BAZEL_MSVC_RUNTIME_VISUAL_STUDIO_EULA=1
+common --repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+build --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+build --host_action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
 
-# Compilation Flags for zig-cc
-build:linux --copt -ffunction-sections
-build:linux --copt -fdata-sections
-build:linux --strip=always
-
-build:linux --features=thin_lto
-# ThinLTO feature doesn't exist in Zig toolchain, so we must set the flags manually.
-# It also doesn't support LTO on darwin targets, so we can't set this globally.
-# Instead, we configure copt/linkopt inside the toolchain itself (with a WORKSPACE patch).
-#build --copt -flto=thin
-
-# On Windows, use the host toolchain
-# NB: after https://github.com/uber/hermetic_cc_toolchain/pull/190 is included in a release,
-# this flag should no longer be needed.
-build:windows --noincompatible_enable_cc_toolchain_resolution
-build:windows --copt=/W1
-build:windows --copt=/WX
-build:windows --copt=/external:W1
-build:windows --copt=/diagnostics:column
-build:windows --copt=/O2
-build:windows --copt=/Ob2
-build:windows --copt=/Oi
-build:windows --copt=/D_MBCS
-build:windows --copt=/DWIN32
-build:windows --copt=/D_WINDOWS
-build:windows --copt=/MD
-build:windows --copt=/GS
-build:windows --copt=/fp:precise
-build:windows --copt=/Gd
-build:windows --copt=/TC
-
+common --@llvm//config:experimental_stub_libgcc_s
