@@ -1,0 +1,41 @@
+diff --git a/libarchive_bazel_windows_config.h b/libarchive_bazel_windows_config.h
+index e6473eb3..2b063ac1 100644
+--- a/libarchive_bazel_windows_config.h
++++ b/libarchive_bazel_windows_config.h
+@@ -118,7 +118,9 @@
+ 
+ #define gid_t short
+ #define id_t short
++#if !defined(__MINGW32__)
+ #define mode_t unsigned short
++#endif
+ #define pid_t int
+ #define ssize_t int64_t
+ #define uid_t short
+diff --git a/libarchive/BUILD.bazel b/libarchive/BUILD.bazel
+index 9dbef4e6..3689982d 100644
+--- a/libarchive/BUILD.bazel
++++ b/libarchive/BUILD.bazel
+@@ -3,6 +3,12 @@ load("//bazel:config.bzl", "PLATFORM_LOCAL_DEFINES")
+ 
+ package(default_visibility = ["//visibility:public"])
+ 
++config_setting(
++    name = "windows_clang",
++    constraint_values = ["@platforms//os:windows"],
++    flag_values = {"@rules_cc//cc/compiler:compiler": "clang"},
++)
++
+ cc_library(
+     name = "internal_hdrs",
+     hdrs = glob(["*.h"]),
+@@ -168,6 +174,9 @@ cc_library(
+         "@rules_cc//cc/compiler:msvc-cl": [
+             "/DEFAULTLIB:bcrypt",
+         ],
++        ":windows_clang": [
++            "-lbcrypt",
++        ],
+         "//conditions:default": [],
+     }),
+     local_defines = PLATFORM_LOCAL_DEFINES,
